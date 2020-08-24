@@ -2,6 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+/*
+  This is not an unit test
+  Test will break if AppService changes
+*/
 describe('AppController', () => {
   let appController: AppController;
 
