@@ -8,18 +8,13 @@
 
 ## Introduction
 
-  It's the author's idea that we shouldn't unit test others code, only our code.
-  i.e. Business Code.
+  This project uses all defaults from Nestjs to set up basic unit tests, using Jest.
 
-  One can achieve 100% coverage of unit tests in the code, but most of the tests are going to be useless.
+  A sample TypeOrm repository was introduced to show a mock in action (not my recommended approach).
 
-  When in doubt how to unit test a controller, just dont! Controllers are framework code and should not have business logic. Controllers benefit more from e2e tests where the test have some value, instead of proving you know how to call your services...
+  The controller unit test is just an example, complex API Controllers benefit more from e2e tests, but this is out of the scope of this example.
 
-  When tired of mocking others libs, remember: "You shouldn't!". You can always separate your business code from other's libs using an abstration. This should make your unit tests easier. Then make integration tests between your abstration's implementation and other's lib.
-
-  Remember acceptance, e2e and regression tests are way more valuable to the client than unit tests, use unit tests with parsimony. They are a tool to keep your code easy to refactor and nothing more.
-
-  Of course this is the author's opinion, mileage may vary.
+  Unit tests are as simple as they can be, this is on purpose.
 
 ## How to run
 
@@ -29,4 +24,6 @@
 
 ## See also
 
-  https://github.com/NagRock/ts-mockito
+  Another solution for mocks in TS: https://github.com/NagRock/ts-mockito
+
+  Fixtures generator: https://github.com/marak/Faker.js/
