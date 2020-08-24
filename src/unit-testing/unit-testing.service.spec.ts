@@ -42,7 +42,7 @@ describe('UnitTestingService', () => {
     ].forEach(([str, value ]) => {
       it('return false', () => {
         // Set desired behaviour
-        jest.spyOn(rules, 'apply').mockReturnValue(value);
+        jest.spyOn(rules, 'applyRule').mockReturnValue(value);
 
         expect(service.applyRule(str)).toBe(false);
       })
@@ -51,7 +51,7 @@ describe('UnitTestingService', () => {
 
     it('return true', () => {
       // Set desired behaviour
-      jest.spyOn(rules, 'apply').mockReturnValue('xptoshould');
+      jest.spyOn(rules, 'applyRule').mockReturnValue('xptoshould');
 
       expect(service.applyRule('xptoshouldbetruenow')).toBe(true);
     })
