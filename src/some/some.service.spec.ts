@@ -1,13 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
+import { mock, instance, when, anyNumber } from 'ts-mockito';
+
 import { SomeService } from './some.service';
 import { SomeRepository } from '../repositories/some.repository';
 import { Some } from '../entities/some.entity';
 
-jest.mock('../repositories/some.repository');
-
 describe('SomeService', () => {
   let service: SomeService;
-  const repo = new SomeRepository();
+  const mockedRepo = mock(SomeRepository);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -15,16 +16,12 @@ describe('SomeService', () => {
         SomeService,
         {
           provide: SomeRepository,
-          useValue: repo,
+          useValue: instance(mockedRepo),
         }
       ],
     }).compile();
 
     service = module.get<SomeService>(SomeService);
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -44,9 +41,15 @@ describe('SomeService', () => {
 
         Solution: Create an abstration between your code and others code.
       */
-      jest.spyOn(repo, 'findOne').mockResolvedValue(expected);
+      when(mockedRepo.findOne(anyNumber())).thenResolve(expected);
 
       await expect(service.doSome(1)).resolves.toEqual(expected);
+    })
+
+    it('returns null', async() => {
+      when(mockedRepo.findOne(anyNumber())).thenResolve(null);
+
+      await expect(service.doSome(1)).resolves.toBeNull();
     })
   });
 });
