@@ -11,4 +11,10 @@ export class UnitTestingService {
 
         return !(result === 'too small' || result === 'no string');
     }
+
+    fireAndForget(number: number): void {
+        if (number) {
+            this.rules.fireAndForget();
+        }
+    }
 }

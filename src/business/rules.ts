@@ -10,6 +10,11 @@ export class Rules {
         return 'no string';
     }
 
+    fireAndForget(): void {
+        // This should not affect the test.
+        throw new Error("Method not implemented.");
+    }
+
     static create(): Rules {
         return new Rules();
     }
