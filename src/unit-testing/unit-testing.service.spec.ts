@@ -2,14 +2,23 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UnitTestingService } from './unit-testing.service';
 import { Rules } from '../business/rules';
 
-// Jest auto mock feature
-jest.mock('../business/rules');
+
+const mockApplyRule = jest.fn();
+const mockFireAndForget = jest.fn();
+
+jest.mock('../business/rules', () => {
+  return {
+    Rules: jest.fn().mockImplementation(
+      () => ({
+        applyRule: mockApplyRule,
+        fireAndForget: mockFireAndForget,
+      })
+    ),
+  }
+});
 
 describe('UnitTestingService', () => {
   let service: UnitTestingService;
-
-  // Create a mock instance
-  const rules = new Rules();
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,7 +27,7 @@ describe('UnitTestingService', () => {
         // Pass the mock as a dependency
         {
           provide: Rules,
-          useValue: rules,
+          useClass: Rules,
         },
       ],
     }).compile();
@@ -27,7 +36,8 @@ describe('UnitTestingService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    mockFireAndForget.mockClear();
+    mockApplyRule.mockClear();
   })
 
   it('should be defined', () => {
@@ -37,12 +47,11 @@ describe('UnitTestingService', () => {
   describe('#applyRule', () => {
     // Our fixtures, the test and result are the same, avoid duplication of code.
     [
-      ['xpto', 'too small' ],
-      [ undefined, 'no string' ],
-    ].forEach(([str, value ]) => {
+      ['xpto', 'too small'],
+      [undefined, 'no string'],
+    ].forEach(([str, value]) => {
       it('return false', () => {
-        // Set desired behaviour
-        jest.spyOn(rules, 'applyRule').mockReturnValue(value);
+        mockApplyRule.mockImplementation(() => value);
 
         expect(service.applyRule(str)).toBe(false);
       })
@@ -50,8 +59,7 @@ describe('UnitTestingService', () => {
 
 
     it('return true', () => {
-      // Set desired behaviour
-      jest.spyOn(rules, 'applyRule').mockReturnValue('xptoshould');
+      mockApplyRule.mockImplementation(() => 'xptoshould');
 
       expect(service.applyRule('xptoshouldbetruenow')).toBe(true);
     })
@@ -60,19 +68,15 @@ describe('UnitTestingService', () => {
   // Sometimes there's no return value, so we can assert the function was called
   describe('#fireAndForget', () => {
     it('should call rules#fireAndForget', () => {
-      jest.spyOn(rules, 'fireAndForget');
-
       service.fireAndForget(1);
 
-      expect(rules.fireAndForget).toHaveBeenCalled();
+      expect(mockFireAndForget.mock.calls.length).toBe(1);
     })
 
     it('should not call rules#fireAndForget', () => {
-      jest.spyOn(rules, 'fireAndForget');
-
       service.fireAndForget(0);
 
-      expect(rules.fireAndForget).not.toBeCalled();
+      expect(mockFireAndForget.mock.calls.length).toBe(0);
     })
   });
 });

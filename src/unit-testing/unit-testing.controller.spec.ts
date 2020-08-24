@@ -6,7 +6,6 @@ import { BadRequestException } from '@nestjs/common';
 
 const mockApplyRule = jest.fn();
 
-// Jest auto mock feature
 jest.mock('./unit-testing.service', () => {
     return {
         UnitTestingService: jest.fn().mockImplementation(
@@ -44,11 +43,11 @@ describe('UnitTestingController', () => {
         it('should return status OK', () => {
             mockApplyRule.mockImplementation(() => true);
 
-            expect(controller.applyRule('nice')).toEqual({"status": "ok"});
+            expect(controller.applyRule('nice')).toEqual({ "status": "ok" });
         });
 
         it('should throw BadRequest', () => {
-            mockApplyRule.mockImplementation(() => false );
+            mockApplyRule.mockImplementation(() => false);
 
             expect(() => controller.applyRule('notnice')).toThrow(BadRequestException);
         });
